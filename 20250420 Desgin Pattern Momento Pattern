@@ -1,0 +1,74 @@
+import java.util.List;
+import java.util.ArrayList;
+
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        Editor editor = new Editor();
+        History history = new History();
+
+        editor.setText("A - NEW MESSAGE NEW TEST");
+        history.push(editor.createState());
+
+        editor.setText("B");
+        history.push(editor.createState());
+
+        editor.setText("C");
+
+        editor.restore(history.pop());
+        System.out.println(editor.getText()); 
+        editor.restore(history.pop());
+        System.out.println(editor.getText());
+    }
+}
+
+class Editor {
+    private String text;
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public EditorState createState() {
+        return new EditorState(text);
+    }
+
+    public void restore(EditorState state) {
+        text = state.getText();
+    }
+}
+
+class History {
+    private List<EditorState> states = new ArrayList<>();
+
+    public void push(EditorState state) {
+        states.add(state);
+    }
+
+    public EditorState pop() {
+        var lastIndex = states.size() - 1;
+        var lastState = states.get(lastIndex);
+        states.remove(lastIndex);
+        return lastState;
+    }
+
+    public EditorState peek() {
+        return states.get(states.size() - 1);
+    }
+}
+
+class EditorState {
+    private String text;
+
+    public EditorState(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+}
