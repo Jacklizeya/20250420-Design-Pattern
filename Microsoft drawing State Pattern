@@ -1,0 +1,56 @@
+import java.util.List;
+import java.util.ArrayList;
+
+class Main {
+    public static void main(String[] args) {
+        Canvas canvas = new Canvas();
+        canvas.setCurrentTool(new TextBox());
+        canvas.mouseDown();
+    }
+
+    public static void drawWithUiControl(UiControl uiControl)  {
+        uiControl.draw();
+    }
+}
+
+public class Canvas {
+    private UiControl currentTool;
+
+    public void setCurrentTool(UiControl currentTool) {
+        this.currentTool = currentTool;
+    }
+
+    public void mouseDown() {
+        currentTool.mouseDown();
+    }
+
+    public void mouseUp() {
+        currentTool.mouseUp();
+    }
+    
+}
+
+abstract class UiControl {
+    abstract void draw();
+    
+}
+
+class TextBox extends UiControl {
+    public void mouseDown() {
+        System.out.println("TextBox mouse down");
+    }
+
+    public void mouseUp() {
+        System.out.println("TextBox mouse up");
+    }
+}
+
+class Button extends UiControl {
+    public void mouseDown() {
+        System.out.println("Button mouse down");
+    }
+
+    public void mouseUp() {
+        System.out.println("Button mouse up");
+    }
+}
