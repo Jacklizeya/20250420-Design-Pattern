@@ -1,0 +1,76 @@
+// Iterator iterator = history.CreateIterator()
+// History {
+//      CreaterIterator() {
+//      return Iterator(history);    
+//    }
+// }
+
+import java.util.List;
+import java.util.ArrayList;
+
+class Main {
+    public static void main(String[] args) {
+        BrowserHistory history = new BrowserHistory();
+        history.push("A");
+        history.push("B");
+        history.push("C");
+
+        // History creates an iterator to go through itself.
+        Iterator iterator = history.createIterator();
+        while (iterator.hasNext()) {
+            String current = iterator.current();
+            System.out.println(current);
+            iterator.next();
+        }
+    }
+}
+
+class BrowserHistory {
+    private List<String> urls = new ArrayList<>();
+
+    public List<String> getUrls() {
+        return urls;
+    }
+    
+    public Iterator createIterator() {
+        return new ListIterator(this);
+    }
+
+    public void push(String url) {
+        urls.add(url);
+    }
+
+    public String pop() {
+        return urls.remove(urls.size() - 1);
+    }
+    
+    public class ListIterator implements Iterator {
+        private BrowserHistory history; 
+        private int index;
+
+        public ListIterator(BrowserHistory history) {
+            this.history = history;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < history.urls.size();
+        }
+
+        @Override
+        public String current() {
+            return history.urls.get(index);
+        }
+
+        @Override
+        public void next() {
+            index++;
+        }
+    }
+}
+
+interface Iterator {
+    boolean hasNext();
+    String current();
+    void next();
+}
