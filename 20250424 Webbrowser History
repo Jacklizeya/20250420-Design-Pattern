@@ -1,9 +1,5 @@
-// Iterator iterator = history.CreateIterator()
-// History {
-//      CreaterIterator() {
-//      return Iterator(history);    
-//    }
-// }
+History creates an iterate to go through itself.
+
 
 import java.util.List;
 import java.util.ArrayList;
