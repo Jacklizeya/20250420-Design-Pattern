@@ -1,0 +1,54 @@
+Using abstract interfac, then provide implementation later
+
+
+// Compressor.java
+public interface Compressor {
+    public void compress();
+}
+
+// Filter.java
+public interface Filter {
+    public void apply();
+}
+
+// DataStorer.java
+public class DataStorer {
+   private Compressor compressor;
+   private Filter filter;
+
+   DataStorer(Compressor Compressor, Filter filter) {
+     this.compressor = Compressor;
+     this.filter = filter;
+   }
+
+   public void store() {
+     compressor.compress();
+     filter.apply();
+   }
+}
+
+// JpegCompressor.java
+public class JpegCompressor implements Compressor { 
+    @Override 
+    public void compress() { 
+        System.out.println("JPEG Compressing"); 
+    } 
+}
+
+// JpegFilter.java
+public class JpegFilter implements Filter {
+    @Override
+    public void apply() {
+        System.out.println("JPEG Filtering.");
+    }
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        // Your code here
+        DataStorer dataStorer = new DataStorer(new JpegCompressor(), new JpegFilter());
+        dataStorer.store();
+        System.out.println("Done storing");
+    }
+}
