@@ -1,0 +1,51 @@
+Common method then customized method
+
+// --- RecordTrial class ---
+class RecordTrial {
+    public void record() {
+        System.out.println("Recording trial...");
+    }
+}
+
+// --- Abstract Task class ---
+abstract class Task {
+    private RecordTrial recordTrial;
+
+    Task() {
+        this.recordTrial = new RecordTrial();
+    }
+
+    Task(RecordTrial recordTrial) {
+        this.recordTrial = recordTrial;
+    }
+
+    // Template method
+    public void execute() {
+        // For common usage
+        recordTrial.record();
+        // For customization
+        customizedExecute();
+    }
+
+    protected abstract void customizedExecute();
+}
+
+// --- Task1 class ---
+class Task1 extends Task {
+    public Task1() {
+        super(new RecordTrial());
+    }
+
+    @Override
+    public void customizedExecute() {
+        System.out.println("Task 1 execution");
+    }
+}
+
+// --- Main class ---
+public class Main {
+    public static void main(String[] args) {
+        Task task = new Task1();
+        task.execute();
+    }
+}
