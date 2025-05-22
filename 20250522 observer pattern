@@ -1,0 +1,41 @@
+abstract Interface DataSource {
+
+   private int value;
+   pivate List<Observers> observers;
+
+   update(int value) {
+     this.value = value;
+     for (final observer in observers) {
+        observer.update(value)
+     }
+   }
+}
+
+class ExcelSheet implements DataSource {
+  
+}
+
+// Push style
+abstract Interface Observer {
+  update(value) {
+     this.value = value
+  }
+}
+
+class PieObserver implements Observer {
+   update(value) {
+     this.value = value
+   }
+}
+
+// Pull style
+class Interface Observer {
+
+   Observer(dataSource) {
+     this.dataSource = dataSource
+   }
+   
+   update() {
+     this.value = dataSource.getValue()
+   }
+}
