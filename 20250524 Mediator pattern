@@ -1,0 +1,4 @@
+  Ad editor
+
+  Option1: centralize logic to ad editor then dispatch
+  Option2: each element has event handler to drive other UI
