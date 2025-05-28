@@ -1,0 +1,3 @@
+Adaptor pattern
+
+For 3rd party lib, can not use it directly, then have some adaptor so it can be used.
