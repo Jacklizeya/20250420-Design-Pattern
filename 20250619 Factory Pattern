@@ -1,0 +1,55 @@
+// Design creation of object to a protected method, child class can override it.
+
+import java.util.Map;
+
+public class AngularFrameworkViewEngine implements ViewEngine {
+    @Override
+    public String render(String htmlTemplateFileName, Map<String, Object> data) {
+        return "Angular Engine to render " + htmlTemplateFileName + " with data: " + data;
+    }
+}
+
+import java.util.Map;
+
+public interface ViewEngine {
+    String render(String htmlTemplateFileName, Map<String, Object> data);
+}
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ProductController extends Controller {
+    public void listProducts() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("products", Arrays.asList("Product 1", "Product 2", "Product 3"));
+        render("products.html", data);  
+    }
+
+    @Override
+    protected ViewEngine createViewEngine() {
+        return new AngularFrameworkViewEngine();
+    }
+}
+
+import java.util.Map;
+
+public abstract class Controller {
+
+    public void render(String htmlTemplateFileName, Map<String, Object> data) {
+       var viewEngine = createViewEngine();
+       var html = viewEngine.render(htmlTemplateFileName, data);
+       System.out.println(html);
+    }
+
+    protected abstract ViewEngine createViewEngine();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        var productController = new ProductController();
+        productController.listProducts();
+    }
+}
+
+
