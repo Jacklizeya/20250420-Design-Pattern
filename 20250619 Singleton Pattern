@@ -1,0 +1,40 @@
+// Singleton pattern:
+// This involves private constructor
+// Static variable to store the instance
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ConfigManager {
+    private Map<String, Object> config = new HashMap<>();
+
+    public void setConfig(String key, Object value) {
+        config.put(key, value);
+    }
+
+    public Object getConfig(String key) {
+        return config.get(key);
+    }
+
+    private ConfigManager() {
+    }
+
+    private static ConfigManager instance = new ConfigManager();
+
+    public static ConfigManager getInstance() {
+        return instance;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        ConfigManager configManager = ConfigManager.getInstance();
+        configManager.setConfig("key", "value");
+        System.out.println(configManager.getConfig("key"));
+
+        ConfigManager configManager2 = ConfigManager.getInstance();
+        System.out.println(configManager2.getConfig("key"));
+    }   
+}
+
