@@ -1,0 +1,62 @@
+
+public class Circle implements Component {
+    private int radius;
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getRadius() {
+        return this.radius;
+    }
+    
+    @Override 
+    public void render() {
+        System.out.println("Circle");
+    }
+
+    @Override
+    public Component copy() {
+        return new Circle();
+    }
+}
+
+
+public interface Component {
+    public void render();
+
+    public Component copy();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Menu menu = new Menu();
+        Circle circle = new Circle();
+        circle.setRadius(10);
+        menu.add(circle);
+        menu.duplicate(circle);
+
+        menu.getComponents().forEach(component -> {
+            component.render();
+        });
+    }
+}
+
+import java.util.ArrayList;
+
+public class Menu {
+    private ArrayList<Component> components = new ArrayList<>();
+
+    public void duplicate(Component component) {
+        Component newComponent = component.copy();
+        this.components.add(newComponent);
+    }
+
+    public void add(Component component) {
+        this.components.add(component);
+    }
+
+    public ArrayList<Component> getComponents() {
+        return components;
+    }
+}
