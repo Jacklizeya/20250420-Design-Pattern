@@ -1,0 +1,133 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// --- PresentationFormat enum ---
+enum PresentationFormat {
+    PDF,
+    IMAGE,
+    VIDEO
+}
+
+// --- Report interface ---
+interface Report {
+    void addPage(String text);
+    void export();
+}
+
+// --- ExportBuilder interface ---
+interface ExportBuilder {
+    void addSlide(Slide slide);
+    void export();
+}
+
+// --- Slide class ---
+class Slide {
+    private String title;
+
+    public Slide(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+}
+
+// --- Presentation class ---
+class Presentation {
+    private List<Slide> slides = new ArrayList<>();
+
+    public void addSlide(Slide slide) {
+        slides.add(slide);
+    }
+
+    public void export(ExportBuilder builder) {
+        for (var slide : slides) {
+            builder.addSlide(slide);
+        }
+        builder.export();
+    }
+}
+
+// --- PdfReport class ---
+class PdfReport implements Report {
+    private List<String> pages = new ArrayList<>();
+    
+    public void addPage(String text) {
+        System.out.println("Adding page: " + text);
+    }
+
+    @Override
+    public void export() {
+        for (var page : pages) {
+            System.out.println("Exporting page: " + page);
+        }
+    }
+}
+
+// --- VideoReport class ---
+class VideoReport implements Report {
+    private List<String> frames = new ArrayList<>();
+
+    @Override
+    public void addPage(String text) {
+        frames.add(text);
+    }
+
+    public void addFrame(String text, int duration) {
+        System.out.println("Adding frame: " + text + " for " + duration + " seconds");
+    }
+
+    @Override
+    public void export() {
+        for (var frame : frames) {
+            System.out.println("Exporting frame: " + frame);
+        }
+    }
+}
+
+// --- PdfBuilder class ---
+class PdfBuilder implements ExportBuilder {
+    private PdfReport report = new PdfReport();
+
+    @Override
+    public void addSlide(Slide slide) {
+        report.addPage(slide.getTitle());
+    }
+
+    @Override
+    public void export() {
+        report.export();
+    }
+}
+
+// --- VideoBuilder class ---
+class VideoBuilder implements ExportBuilder {
+    private VideoReport report = new VideoReport();
+
+    @Override
+    public void addSlide(Slide slide) {
+        report.addFrame(slide.getTitle(), 10);
+    }
+
+    @Override
+    public void export() {
+        report.export();
+    }
+}
+
+// --- Main class ---
+public class CombinedBuilder {
+    public static void main(String[] args) {
+        var presentation = new Presentation();
+        presentation.addSlide(new Slide("Slide 1"));
+        presentation.addSlide(new Slide("Slide 2"));
+        presentation.addSlide(new Slide("Slide 3"));
+
+        var pdfBuilder = new PdfBuilder();
+        presentation.export(pdfBuilder);
+        
+        var videoBuilder = new VideoBuilder();
+        presentation.export(videoBuilder);
+    }
+}
