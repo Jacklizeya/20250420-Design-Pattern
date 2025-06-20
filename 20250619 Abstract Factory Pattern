@@ -1,0 +1,93 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// --- Widget interface ---
+interface Widget {
+    void render();
+}
+
+// --- WidgetFactory interface ---
+interface WidgetFactory {
+    Widget createButton();
+    Widget createTextBox();
+}
+
+// --- Theme abstract class (not used in logic, but included for completeness) ---
+abstract class Theme { }
+
+// --- MaterialButton class ---
+class MaterialButton implements Widget {
+    public void render() {
+        System.out.println("Material Button");
+    }
+}
+
+// --- MaterialTextBox class ---
+class MaterialTextBox implements Widget {
+    public void render() {
+        System.out.println("Material TextBox");
+    }
+}
+
+// --- MaterialWidgetFactory class ---
+class MaterialWidgetFactory implements WidgetFactory {
+    @Override
+    public Widget createButton() {
+        return new MaterialButton();
+    }
+
+    @Override
+    public Widget createTextBox() {
+        return new MaterialTextBox();
+    }
+}
+
+// --- ReactNativeButton class ---
+class ReactNativeButton implements Widget {
+    @Override
+    public void render() {
+        System.out.println("React Native Button rendered");
+    }
+}
+
+// --- ReactNativeTextBox class ---
+class ReactNativeTextBox implements Widget {
+    @Override
+    public void render() {
+        System.out.println("React Native TextBox");
+    }
+}
+
+// --- ReactNativeWidgetFactory class ---
+class ReactNativeWidgetFactory implements WidgetFactory {
+    @Override
+    public Widget createButton() {
+        return new ReactNativeButton();
+    }
+
+    @Override
+    public Widget createTextBox() {
+        return new ReactNativeTextBox();
+    }
+}
+
+// --- Form class ---
+class Form {
+    private List<Widget> widgets = new ArrayList<>();
+
+    public void render(WidgetFactory widgetFactory) {
+        widgets.add(widgetFactory.createButton());
+        widgets.add(widgetFactory.createTextBox());
+        for (var widget : widgets) {
+            widget.render();
+        }
+    }
+}
+
+// --- Main class ---
+public class Main {
+    public static void main(String[] args) {
+        var form = new Form();
+        form.render(new MaterialWidgetFactory());
+    }
+}
