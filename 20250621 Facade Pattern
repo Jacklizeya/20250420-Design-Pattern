@@ -1,0 +1,49 @@
+package facade;
+
+// Message Class
+class Message {
+    private String content;
+
+    public Message(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+
+// Connection Class
+class Connection {
+    public void disconnect() {
+        System.out.println("Disconnecting from the server");
+    }
+}
+
+// NotificationServer Class (Facade)
+class NotificationServer {
+    public Connection connect(String ipAddress) {
+        System.out.println("Connecting to " + ipAddress);
+        return new Connection();
+    }
+
+    public String authenticate(String appId, String key) {
+        return "authToken";
+    }
+
+    public void send(String authToken, Message message, String target) {
+        System.out.println("Sending message " + message.getContent() + " to " + target);
+    }
+}
+
+// Main Class to demonstrate the Facade Pattern
+class Main {
+    public static void main(String[] args) {
+        var server = new NotificationServer();
+        var connection = server.connect("127.0.0.1");
+        var authToken = server.authenticate("123456", "authToken");
+        var message = new Message("Hello World");
+        server.send(authToken, message, "target");
+        connection.disconnect();
+    }
+}
