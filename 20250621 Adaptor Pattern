@@ -1,0 +1,66 @@
+package adaptor;
+
+// Filter Interface
+public interface Filter {
+    void apply(Image image);
+}
+
+// Image Class
+class Image {
+    
+}
+
+// ImageView Class
+class ImageView {
+    private Image image;
+
+    public ImageView(Image image) {
+        this.image = image;
+    }
+
+    public void apply(Filter filter) {
+        filter.apply(this.image);
+    }
+}
+
+// ThirdPartyFilter Class (the incompatible class we want to adapt)
+class ThirdPartyFilter {
+    public void init() {
+        System.out.println("Initializing third party filter");
+    }
+
+    public void render(Image image) {
+        System.out.println("Applying third party filter");
+    }
+}
+
+// ThirdPartyFilterAdaptor Class (the adapter)
+class ThirdPartyFilterAdaptor implements Filter {
+    private ThirdPartyFilter thirdPartyFilter;
+
+    public ThirdPartyFilterAdaptor(ThirdPartyFilter thirdPartyFilter) {
+        thirdPartyFilter.init();
+        this.thirdPartyFilter = thirdPartyFilter;
+    }
+
+    @Override
+    public void apply(Image image) {
+        thirdPartyFilter.render(image);
+    }
+}
+
+// VividFilter Class (example of a native filter implementation)
+class VividFilter implements Filter {
+    @Override
+    public void apply(Image image) {
+        System.out.println("Applying vivid filter");
+    }
+}
+
+// Main Class to demonstrate the Adapter Pattern
+class Main {
+    public static void main(String[] args) {
+        var imageView = new ImageView(new Image());
+        imageView.apply(new ThirdPartyFilterAdaptor(new ThirdPartyFilter()));
+    }
+}
