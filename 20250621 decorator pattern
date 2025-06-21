@@ -1,0 +1,61 @@
+package decorator;
+
+// Stream Interface
+interface Stream {
+    void write(String data);
+}
+
+// CloudStream Class (Concrete Component)
+class CloudStream implements Stream {
+    public void write(String data) {
+        System.out.println("Storing " + data);
+    }
+}
+
+// EncriptedCloudStream Class (Concrete Decorator)
+class EncriptedCloudStream implements Stream {
+
+    private Stream stream;
+
+    public EncriptedCloudStream(Stream stream) {
+        this.stream = stream;
+    }
+
+    @Override
+    public void write(String data) { 
+        var encrypted = encrypt(data);
+        stream.write(encrypted);
+    }
+
+    private String encrypt(String data) {
+        return "encrypted>>> " + data;
+    }
+}
+
+// CompressedCloudStream Class (Concrete Decorator)
+class CompressedCloudStream implements Stream {
+    
+    private Stream stream;
+
+    public CompressedCloudStream(Stream stream) {
+        this.stream = stream;
+    }
+
+    @Override
+    public void write(String data) {
+        var compressed = compress(data);
+        stream.write(compressed);
+    }
+
+    private String compress(String data) {
+        return "compressed>>> " + data;
+    }
+}
+
+// Main Class to demonstrate the Decorator Pattern
+class Main {
+    public static void main(String[] args) {
+        var stream = new CompressedCloudStream(new EncriptedCloudStream(new CloudStream()));
+        stream.write("Hello World");
+    }
+}
