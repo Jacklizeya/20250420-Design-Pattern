@@ -1,0 +1,79 @@
+// Data loading is too expensive
+// So having a proxy class to represent the real object, with null first
+// and only load the data when it's needed
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        var library = new Library();
+        library.add(new EbookProxy("Ebook 1"));
+        library.add(new EbookProxy("Ebook 2"));
+        library.add(new EbookProxy("Ebook 3"));
+
+        library.openEbook("Ebook 1"); 
+    }
+}
+
+abstract class Ebook {
+    private String fileName;
+
+    public Ebook(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public abstract void show();
+
+    public String getFileName() {
+        return fileName;
+    }
+}
+
+class EbookReal extends Ebook {
+    public EbookReal(String fileName) {
+        super(fileName);
+    }
+
+    @Override
+    public void show() {
+        // Lazy loading
+        load();
+        System.out.println("Showing the ebook " + getFileName());
+    }
+
+    private void load() {
+        System.out.println("Loading the ebook " + getFileName());
+    }
+}
+
+class EbookProxy extends Ebook {
+    private EbookReal realEbook;
+
+    public EbookProxy(String fileName) {
+        super(fileName);
+    }
+
+    public void show() {
+        if (realEbook == null) {
+            realEbook = new EbookReal(getFileName());
+        }
+        realEbook.show();
+    }
+}
+
+class Library {
+    private Map<String, EbookProxy> ebooks = new HashMap<>();
+
+    public void add(EbookProxy ebook) {
+        ebooks.put(ebook.getFileName(), ebook);
+    }
+    
+    public void openEbook(String fileName) {
+        var ebook = ebooks.get(fileName);
+        if (ebook == null) {
+            throw new IllegalArgumentException("Ebook not found");
+        }
+        ebook.show();
+    }
+}
