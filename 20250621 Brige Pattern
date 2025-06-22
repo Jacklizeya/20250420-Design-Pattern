@@ -1,0 +1,63 @@
+package bridge;
+
+// Device Class (Implementation Interface)
+abstract class Device {
+    public abstract void turnOn();
+    public abstract void turnOff();
+}
+
+// SonyDevice Class (Concrete Implementation)
+class SonyDevice extends Device {
+    @Override
+    public void turnOn() {
+        System.out.println("Turning on the Sony TV");
+    }
+
+    @Override
+    public void turnOff() {
+        System.out.println("Turning off the Sony TV");
+    }
+}
+
+// RemoteControl Class (Abstraction)
+class RemoteControl {
+    protected Device device;
+
+    public void turnOn() {
+        device.turnOn();
+    }
+    
+    public void turnOff() {
+        device.turnOff();
+    }
+
+    RemoteControl(Device device) {
+        this.device = device;
+    }
+}
+
+// AdvancedRemoteControl Class (Refined Abstraction)
+class AdvancedRemoteControl extends RemoteControl {
+    AdvancedRemoteControl(Device device) {
+        super(device);
+    }
+
+    public void setChannel(int channel) {
+        System.out.println("Setting channel to " + channel);
+    }
+}
+
+// Main Class to demonstrate the Bridge Pattern
+class Main {
+    public static void main(String[] args) {
+
+        var sonyRemoteControl = new RemoteControl(new SonyDevice());
+        sonyRemoteControl.turnOn();
+        sonyRemoteControl.turnOff();
+
+        var sonyAdvancedRemoteControl = new AdvancedRemoteControl(new SonyDevice());
+        sonyAdvancedRemoteControl.turnOn();
+        sonyAdvancedRemoteControl.turnOff();
+        sonyAdvancedRemoteControl.setChannel(1);
+    }
+}
