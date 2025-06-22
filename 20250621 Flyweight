@@ -1,0 +1,80 @@
+package flyweight;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+// PointType Enum
+enum PointType {
+    HOSPITAL,
+    CAFE,
+    RESTAURANT
+}
+
+// PointIcon Class (Flyweight)
+class PointIcon {
+    private PointType type;
+    private byte[] icon; // 5MB memory takes too much space
+
+    public PointIcon(PointType type, byte[] icon) {
+        this.type = type;
+        this.icon = icon;
+    }
+
+    public PointType getType() {
+        return type;
+    }
+
+    public byte[] getIcon() {
+        return icon;
+    }
+}
+
+// PointIconFactory Class (Flyweight Factory)
+class PointIconFactory {
+    // This is kind of like a cache
+    private static Map<PointType, PointIcon> icons = new HashMap<>();
+
+    public static PointIcon getPointIcon(PointType type) {
+        if (!icons.containsKey(type)) {
+            icons.put(type, new PointIcon(type, new byte[] { 1, 2, 3 }));
+        }
+        return icons.get(type);
+    }
+}
+
+// Point Class (Context)
+class Point {
+    private int x;
+    private int y;
+    private PointIcon pointIcon;
+
+    public Point(int x, int y, PointIcon pointIcon) {
+        this.x = x;
+        this.y = y;
+        this.pointIcon = pointIcon;
+    }
+
+    public void draw() {
+        System.out.println("x: " + x + ", y: " + y + " represents " + pointIcon.getType() + " with icon " + pointIcon.getIcon());
+    }
+}
+
+// PointService Class
+class PointService {
+    public List<Point> getPoints() {
+        return List.of(new Point(1, 2, PointIconFactory.getPointIcon(PointType.HOSPITAL)),
+                new Point(3, 4, PointIconFactory.getPointIcon(PointType.CAFE)));
+    }
+}
+
+// Main Class to demonstrate the Flyweight Pattern
+class Main {
+    public static void main(String[] args) {
+        var service = new PointService();
+        var points = service.getPoints();
+        for (var point : points) {
+            point.draw();
+        }
+    }
+}
