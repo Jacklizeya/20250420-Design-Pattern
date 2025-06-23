@@ -1,0 +1,50 @@
+package state;
+
+// Combined State Pattern Implementation
+// This file contains all classes needed for the State pattern demonstration
+
+// Interface defining the state behavior
+interface Tool {
+    public void mouseDown();
+    public void mouseUp();
+}
+
+// Concrete state implementation
+class Pen implements Tool {
+    @Override
+    public void mouseDown() {
+        System.out.println("Pen mouse down");
+    }
+
+    @Override
+    public void mouseUp() {
+        System.out.println("Pen mouse up");
+    }
+}
+
+// Context class that uses the state
+class Canvas {
+    private Tool currentTool;
+
+    public void setCurrentTool(Tool currentTool) {
+        this.currentTool = currentTool;
+    }
+
+    public void mouseDown() {
+        currentTool.mouseDown();
+    }
+
+    public void mouseUp() {
+        currentTool.mouseUp();
+    }
+}
+
+// Main class to demonstrate the State pattern
+public class CombinedStatePattern {
+    public static void main(String[] args) {
+        var canvas = new Canvas();
+        canvas.setCurrentTool(new Pen());
+        canvas.mouseDown();
+        canvas.mouseUp();
+    }
+}
