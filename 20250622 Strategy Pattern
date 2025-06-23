@@ -1,0 +1,54 @@
+package strategy;
+
+// Combined Strategy Pattern Implementation
+// This file contains all classes needed for the Strategy pattern demonstration
+
+// Strategy interface for compression
+interface Compressor {
+    void compress(String fileName);
+}
+
+// Strategy interface for filtering
+interface Filter {
+    void apply(String fileName);
+}
+
+// Concrete strategy for JPEG compression
+class JpegCompressor implements Compressor {
+    @Override
+    public void compress(String fileName) {
+        System.out.println("Compressing using JPEG");
+    }
+}
+
+// Concrete strategy for black and white filtering
+class BlackAndWhiteFilter implements Filter {
+    @Override
+    public void apply(String fileName) {
+        System.out.println("Applying black and white filter");
+    }
+}
+
+// Context class that uses the strategies
+class ImageStorage {
+    private Compressor compressor;
+    private Filter filter;
+
+    public ImageStorage(Compressor compressor, Filter filter) {
+        this.compressor = compressor;
+        this.filter = filter;
+    }
+
+    public void store(String fileName) {
+        compressor.compress(fileName);
+        filter.apply(fileName);
+    }
+}
+
+// Main class to demonstrate the Strategy pattern
+public class CombinedStrategyPattern {
+    public static void main(String[] args) {
+        var imageStorage = new ImageStorage(new JpegCompressor(), new BlackAndWhiteFilter());
+        imageStorage.store("a");
+    }
+}
