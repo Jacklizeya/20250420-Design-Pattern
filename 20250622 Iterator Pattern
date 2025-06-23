@@ -1,0 +1,68 @@
+package iterateor;
+
+// Combined Iterator Pattern Implementation
+// This file contains all classes needed for the Iterator pattern demonstration
+
+import java.util.Iterator;
+
+// Collection class that holds the data
+class BrowserHistory {
+    private String[] urls = new String[10];
+    private int index = 0;
+    private int count = 0;
+
+    public void push(String url) {
+        if (count < urls.length) {
+            urls[count++] = url;
+        }
+        // else, could resize array or throw exception if needed
+    }
+
+    public String pop() {
+        if (count == 0) return null;
+        String url = urls[--count];
+        urls[count] = null;
+        return url;
+    }
+
+    public Iterator<String> createIterator() {
+        return new ListIterator(this);
+    }
+
+    // Iterator implementation
+    public class ListIterator implements Iterator<String> {
+        public ListIterator(BrowserHistory browserHistory) {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < count;
+        }
+
+        @Override
+        public String next() {
+            return urls[index++];
+        }
+
+        public String current() {
+            return urls[index];
+        }
+    }
+}
+
+// Main class to demonstrate the Iterator pattern
+public class CombinedIteratorPattern {
+    public static void main(String[] args) {
+        var history = new BrowserHistory();
+        history.push("a");
+        history.push("b");
+        history.push("c");
+ 
+        // Goal it to make this part no change.
+        var iterator = history.createIterator();
+        while (iterator.hasNext()) {
+            var url = iterator.next();
+            System.out.println(url);
+        }
+    }
+}
