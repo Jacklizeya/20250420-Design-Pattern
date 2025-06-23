@@ -1,0 +1,63 @@
+package command;
+
+// Combined Command Pattern Implementation
+// This file contains all classes needed for the Command pattern demonstration
+
+// Command interface that defines the contract for all commands
+interface Command {
+    void execute();
+}
+
+// Receiver class that performs the actual work
+class CustomerService {
+    public void addCustomer() {
+        System.out.println("Add customer");
+    }
+}
+
+// Concrete command that implements the Command interface
+class AddCustomerCommand implements Command {
+    private CustomerService customerService;
+
+    public AddCustomerCommand(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @Override
+    public void execute() {
+        customerService.addCustomer();
+    }
+}
+
+// Invoker class that triggers the command execution
+class Button {
+    private String label;
+    private Command command;
+
+    public Button(String label, Command command) {
+        this.label = label;
+        this.command = command;
+    }
+
+    public void click() {
+        command.execute();
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+}
+
+// Main class to demonstrate the Command pattern
+public class CombinedCommandPattern {
+    public static void main(String[] args) {
+        var customerService = new CustomerService();
+        var addCustomerCommand = new AddCustomerCommand(customerService);
+        Button button = new Button("Add Customer", addCustomerCommand);
+        button.click();
+    }
+}
