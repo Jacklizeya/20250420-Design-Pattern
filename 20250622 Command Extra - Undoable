@@ -1,0 +1,102 @@
+package command;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Command interface that defines the contract for all commands
+interface Command {
+    void execute();
+}
+
+// UndoableCommand interface that extends Command with undo functionality
+interface UndoableCommand extends Command {
+    void undo();
+}
+
+// Document class that represents the content being manipulated
+class Document {
+    private String content;
+
+    public Document(String content) {
+        this.content = content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void makeBold() {
+        content = "<b>" + content + "</b>";
+    }
+
+    public void unmakeBold() {
+        content = content.replace("<b>", "").replace("</b>", "");
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+
+// History class that manages the command history for undo functionality
+class History {
+    private List<UndoableCommand> commands = new ArrayList<>();
+
+    public void push(UndoableCommand command) {
+        commands.add(command);
+    }
+
+    public UndoableCommand pop() {
+        return commands.remove(commands.size() - 1);
+    }
+}
+
+// BoldCommand that implements UndoableCommand for making text bold
+class BoldCommand implements UndoableCommand {
+    private Document document;
+    private History history;
+
+    public BoldCommand(Document document, History history) {
+        this.document = document;
+        this.history = history;
+    }
+
+    public void execute() {
+        document.makeBold();
+        history.push(this);
+    }
+
+    public void undo() {
+        document.unmakeBold();
+    }
+}
+
+// UndoCommand that implements Command for undoing the last command
+class UndoCommand implements Command {
+    private History history;
+
+    public UndoCommand(History history) {
+        this.history = history;
+    }
+
+    @Override
+    public void execute() {
+        var lastCommand = history.pop();
+        lastCommand.undo();
+    }
+}
+
+// Main class to demonstrate the Command pattern with undo functionality
+public class Main {
+    public static void main(String[] args) {
+        var document = new Document("Hello World");
+        var history = new History();
+        var boldCommand = new BoldCommand(document, history);
+        boldCommand.execute();
+        System.out.println(document.getContent());
+
+        var undoCommand = new UndoCommand(history);
+        undoCommand.execute();
+        System.out.println(document.getContent());
+    }
+}
