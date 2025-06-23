@@ -1,0 +1,64 @@
+package template;
+
+// Combined Template Method Pattern Implementation
+// This file contains all classes needed for the Template Method pattern demonstration
+
+// Abstract template class that defines the algorithm structure
+abstract class Task {
+    private AuditTrail auditTrail;
+
+    public Task(AuditTrail auditTrail) {
+        this.auditTrail = auditTrail;
+    }
+
+    protected abstract void doExecute();
+
+    public void execute() {
+        auditTrail.record();
+        doExecute();
+    }
+}
+
+// Concrete implementation of Task for transferring money
+class TransferMoneyTask extends Task {
+
+    public TransferMoneyTask(AuditTrail auditTrail) {
+        super(auditTrail);
+    }
+
+    @Override
+    protected void doExecute() {
+        System.out.println("Transfer money");
+    }
+}
+
+// Concrete implementation of Task for generating reports
+class GenerateReportTask extends Task {
+
+    public GenerateReportTask(AuditTrail auditTrail) {
+        super(auditTrail);
+    }
+
+    @Override
+    protected void doExecute() {
+        System.out.println("Generate report");
+    }
+}
+
+// Helper class for audit trail functionality
+class AuditTrail {
+    public void record() {
+        System.out.println("Audit");
+    }
+}
+
+// Main class to demonstrate the Template Method pattern
+public class CombinedTemplatePattern {
+    public static void main(String[] args) {
+        var task = new TransferMoneyTask(new AuditTrail());
+        task.execute();
+
+        var task2 = new GenerateReportTask(new AuditTrail());
+        task2.execute();
+    }
+}
