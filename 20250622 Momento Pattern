@@ -1,0 +1,70 @@
+// Combined Memento Pattern Implementation
+// This file contains all classes needed for the Memento pattern demonstration
+
+import java.util.ArrayList;
+import java.util.List;
+
+// This is to make the state scalable
+class EditorState {
+    private final String content;
+
+    public EditorState(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+
+class Editor {
+    private EditorState currentState;
+
+    public EditorState createState(EditorState editorState) {
+        this.currentState = editorState;
+        return currentState;
+    }
+
+    public void restore(EditorState state) {
+        currentState = state;
+    }
+
+    public void getState() {
+        System.out.println(currentState.getContent());
+    }
+}
+
+// This is the separate responsibility
+class History {
+    private List<EditorState> states = new ArrayList<>();
+
+    public void push(EditorState state) {
+        states.add(state);
+    }
+
+    public EditorState pop() {
+        return states.remove(states.size() - 1);
+    }
+}
+
+public class CombinedMementoPattern {
+    public static void main(String[] args) {
+        var editor = new Editor();
+        var history = new History();
+
+        history.push(editor.createState(new EditorState("a")));
+        editor.getState();
+
+        history.push(editor.createState(new EditorState("b")));
+        editor.getState();
+
+        history.push(editor.createState(new EditorState("c")));
+        editor.getState();
+
+        editor.restore(history.pop());
+        editor.getState();
+
+        editor.restore(history.pop());
+        editor.getState();
+    }
+}
