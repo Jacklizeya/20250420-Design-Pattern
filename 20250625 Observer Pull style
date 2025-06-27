@@ -1,0 +1,72 @@
+package observer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Observer interface that defines the contract for all observers
+interface Observer {
+    void update(int value);
+}
+
+// Subject class that holds the data and notifies observers
+class DataSource {
+    private int value;
+    private List<Observer> observers = new ArrayList<>();
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+        notifyObservers();
+    }
+
+    public void notifyObservers() {
+        for (var observer : observers) {
+            observer.update(value);
+        }
+    }
+}
+
+// Concrete observer that displays data as a chart
+class Chart implements Observer {
+    private int value = 0;
+
+    @Override
+    public void update(int value) {
+        this.value = value;
+        System.out.println("Chart updated: " + value);
+    }
+}
+
+// Concrete observer that displays data as a spreadsheet
+class SpreadSheet implements Observer {
+    private int value = 0;
+
+    @Override
+    public void update(int value) {
+        this.value = value;
+        System.out.println("SpreadSheet updated: " + value);
+    }
+}
+
+// Main class to demonstrate the Observer pattern
+public class Main {
+    public static void main(String[] args) {
+        var dataSource = new DataSource();
+        var chart = new Chart();
+        var sheet = new SpreadSheet();
+
+        dataSource.addObserver(chart);        
+        dataSource.addObserver(sheet);
+
+        dataSource.setValue(1);
+        dataSource.setValue(2);
+        dataSource.setValue(3);
+    }
+}
