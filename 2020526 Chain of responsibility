@@ -1,0 +1,70 @@
+package chain_of_responsibility;
+
+// HTTP request class that contains user credentials
+class HttpRequest {
+    private String username;
+    private String password;
+
+    public HttpRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+
+// Abstract base class for all processors in the chain
+abstract class Processor {
+    public Processor next;
+
+    public Processor(Processor next) {
+        this.next = next;
+    }
+
+    public abstract boolean thisHandleSuccess(HttpRequest request);
+
+    void process(HttpRequest request) {
+        if (thisHandleSuccess(request) && next != null) {
+            next.process(request);
+        }
+        return;
+    }
+}
+
+// Concrete processor for authentication
+class Authenticator extends Processor {
+    public Authenticator(Processor next) {
+        super(next);
+    }
+
+    public boolean thisHandleSuccess(HttpRequest request) {
+        if (request.getUsername().equals("admin") && request.getPassword().equals("1234")) {
+            System.out.println("Authentication successful");
+            return true;
+        }
+        System.out.println("Authentication failed");
+        return false;
+    }
+}
+
+// Concrete processor for logging
+class Logging extends Processor {
+    public Logging(Processor next) {
+        super(next);
+    }
+
+    public boolean thisHandleSuccess(HttpRequest request) {
+        System.out.println("Logging...");
+        return true;
+    }
+}
+
+// Concrete processor for compression
+class Compressor extends Processor {
+    public Compre
