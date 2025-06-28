@@ -1,0 +1,106 @@
+package mediator;
+
+// Abstract mediator class that defines the contract for all mediators
+abstract class Mediator {
+    public abstract void changed(UIControl control);
+}
+
+// Base class for all UI controls
+class UIControl {
+    protected Mediator mediator;
+
+    public UIControl(Mediator mediator) {
+        this.mediator = mediator;
+    }
+}
+
+// Button control that extends UIControl
+class Button extends UIControl {
+    private boolean isEnabled;
+
+    public Button(Mediator mediator) {
+        super(mediator);
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+        mediator.changed(this);
+    }
+}
+
+// TextBox control that extends UIControl
+class TextBox extends UIControl {
+    private String content;
+
+    public TextBox(Mediator mediator) {
+        super(mediator);
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        mediator.changed(this);
+    }
+}
+
+// ListBox control that extends UIControl
+class ListBox extends UIControl {
+    private String selection;
+
+    public ListBox(Mediator mediator) {
+        super(mediator);
+    }
+
+    public String getSelection() {
+        return selection;
+    }
+
+    public void setSelection(String selection) {
+        this.selection = selection;
+        // This is a trick, the mediator output itself as this.
+        mediator.changed(this);
+    }
+}
+
+// Concrete mediator that coordinates UI controls
+class AdEditor extends Mediator {
+    public ListBox listBox = new ListBox(this);
+    public TextBox textBox = new TextBox(this);
+    public Button button = new Button(this);
+
+    public AdEditor() {}
+
+    @Override
+    public void changed(UIControl control) {
+        if (control instanceof ListBox) {
+            textBox.setContent(((ListBox) control).getSelection());
+            button.setEnabled(true);
+        } else if (control instanceof TextBox) {
+            if (((TextBox) control).getContent().length() > 0) {
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+            }
+        } else if (control instanceof Button) {
+            System.out.println("Button clicked and save into database");
+        }
+    }
+}
+
+// Main class to demonstrate the Mediator pattern
+public class Main {
+    public static void main(String[] args) {
+        AdEditor adEditor = new AdEditor();
+
+        adEditor.listBox.setSelection("Ad 1");
+        System.out.println(adEditor.textBox.getContent());
+        System.out.println(adEditor.button.isEnabled());
+    }
+}
