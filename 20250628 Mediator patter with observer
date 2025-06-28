@@ -1,0 +1,123 @@
+package mediator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Event handler interface for handling events
+interface EventHandler {
+    void handle();
+}
+
+// Base class for all UI controls with event handling
+class UIControl {
+    private List<EventHandler> eventHandlers = new ArrayList<>();
+
+    public UIControl() {
+    }
+
+    public void addEventHandler(EventHandler eventHandler) {
+        eventHandlers.add(eventHandler);
+    }
+
+    public void removeEventHandler(EventHandler eventHandler) {
+        eventHandlers.remove(eventHandler);
+    }
+
+    protected void notifyObservers() {
+        for (EventHandler eventHandler : eventHandlers) {
+            eventHandler.handle();
+        }
+    }
+}
+
+// Button control that extends UIControl
+class Button extends UIControl {
+    private boolean isEnabled;
+
+    public Button() {
+        super();
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+        notifyObservers();
+    }
+}
+
+// TextBox control that extends UIControl
+class TextBox extends UIControl {
+    private String content;
+
+    public TextBox() {
+        super();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        notifyObservers();
+    }
+}
+
+// ListBox control that extends UIControl
+class ListBox extends UIControl {
+    private String selection;
+
+    public ListBox() {
+        super();
+    }
+
+    public String getSelection() {
+        return selection;
+    }
+
+    public void setSelection(String selection) {
+        this.selection = selection;
+        notifyObservers();
+    }
+}
+
+// AdEditor class that coordinates UI controls using event handlers
+class AdEditor {
+    // This is a trick, private fields initialize with this.
+    public ListBox listBox = new ListBox();
+    public TextBox textBox = new TextBox();
+    public Button button = new Button();
+
+    public AdEditor() {
+        // This is middle advanced version.
+        listBox.addEventHandler(
+            () -> {
+                textBox.setContent(listBox.getSelection());
+            }
+        );
+        textBox.addEventHandler(
+            () -> {
+                button.setEnabled(textBox.getContent().length() > 0);
+            }
+        );
+        button.addEventHandler(
+            () -> {
+                System.out.println("Button clicked and save into database");
+            }
+        );
+    }
+}
+
+// Main class to demonstrate the updated pattern
+public class Main {
+    public static void main(String[] args) {
+        AdEditor adEditor = new AdEditor();
+
+        adEditor.listBox.setSelection("Ad 1");
+        System.out.println(adEditor.textBox.getContent());
+        System.out.println(adEditor.button.isEnabled());
+    }
+}
